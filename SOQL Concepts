@@ -1,0 +1,16 @@
+//SOQL Concepts
+//Date: 05, Feb 2018
+
+
+//Standard Objects
+//Task Performed: Executred query in Console and Eclipse
+
+Parent to Child
+SELECT Id, Name, (SELECT id, FirstName, LastName FROM Contacts) form Account 
+
+
+Child to Parent
+Select c.LastName, c.FirstName, c.Account.Name, c.AccountId From Contact c
+
+
+//Custom Objects
