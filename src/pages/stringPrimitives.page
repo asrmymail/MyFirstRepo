@@ -1,0 +1,13 @@
+<apex:page controller="stringPrimitiveClass" showHeader="false" lightningStylesheets="true" > 
+<apex:slds />
+<apex:sectionHeader title="Primitive Variables"/>
+    <br/>
+         <div class="slds-page-header">
+             String Value is : {!CallSingleStringVar}<br/> 
+             integer Value is : {!CallSingleIntegerVar}<br/> 
+             Boolean Value is : {!CallBooleanVar}<br/> 
+             Today Date is : {!CallDateVar}<br/> 
+             Date and Time now is : {!CallDateTimeVar}<br/> 
+             Double value is : {!CallDoubleVar}<br/> 
+         </div>
+</apex:page>

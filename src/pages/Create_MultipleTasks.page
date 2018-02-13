@@ -1,0 +1,119 @@
+<apex:page showHeader="false" controller="Create_MultipleTasks_Cls">
+    
+    <style>
+    .activeTab {background-color: #236FBD; color:white; background-image:none; height:30px; font-size:16px}
+    .inactiveTab { background-color: lightgrey; color:black; background-image:none}
+    </style>
+    
+    <apex:form >
+    <br/>
+    <apex:tabPanel switchType="client" selectedTab="CreateCallLog" id="CallLogTabPanel" tabClass="activeTab" inactiveTabClass="inactiveTab">
+   <apex:tab label="Create Call Log" name="CreateCallLog" id="tabOne" >
+        <apex:pageBlock title="Create Call Log" tabStyle="Task">
+          <apex:pageBlockSection >
+             <apex:inputField value="{!cllm.Customer__c}" />
+             <apex:inputField value="{!cllm.Contact__c}"/>
+             <apex:inputField value="{!cllm.Subject__c}" style="width: 360px; height: 40px"/>
+             <apex:inputField value="{!cllm.Status__c}"/>
+             <apex:inputField value="{!cllm.CallDuration__c}"/>
+             <apex:outputText value="{!$User.FirstName}" label="Agent Name"></apex:outputText>
+             <apex:inputField value="{!cllm.Type__c}"/>
+             <apex:inputField value="{!cllm.BusinessType__c}"/>
+             <apex:inputField value="{!cllm.AssetHeader__c}"/>
+          </apex:pageBlockSection>  
+          <apex:pageBlockSection title="Notes" >
+            <apex:inputField value="{!cllm.CallNotes__c}" style="width: 360px; height: 60px"/>
+            <apex:inputField value="{!cllm.IssueType__c}" label="issueType" />
+            <apex:inputField value="{!cllm.IssueTypeL__c}"/>
+             
+          </apex:pageBlockSection>
+          <apex:pageBlockButtons >
+              <apex:commandButton value="Save Log" action="{!save}" disabled="false"/>
+           </apex:pageBlockButtons>
+        </apex:pageBlock>
+     </apex:tab>
+        <apex:tab label="Customer" name="Customer" id="tabTwo">
+          <apex:pageBlock >
+          <div align="center">
+          Account :<apex:inputField value="{!cllm.Customer__c}" />
+          <apex:commandButton value="Add" />
+          
+          <apex:pageBlockTable value="{!wrapper}" var="tw">
+          
+          <!--<apex:column headerValue="Ident">
+          <apex:outputText value="{!tw.ident}"/> 
+          </apex:column>-->
+          
+          <apex:column headerValue="Customer">
+          <apex:inputField value="{!tw.callLog.Customer__c}"/> 
+          </apex:column>
+          <apex:column headerValue="Subject">
+          <apex:inputField value="{!tw.callLog.Subject__c}"/> 
+          </apex:column>
+          
+          <apex:column headerValue="Agent">
+          <apex:inputField value="{!tw.callLog.AgentName__c}"/>
+          </apex:column>
+          
+          <apex:column headerValue="Notes">
+          <apex:inputField value="{!tw.callLog.CallNotes__c}"/>
+          </apex:column>
+          
+          <apex:column >
+          
+            <apex:commandButton value="Delete" action="{!delWrapper}" reRender="CallLogTabPanel">
+            <apex:param name="toDelIdent1" value="{!tw.ident}" assignTo="{!toDelIdent}"/> 
+            </apex:commandButton>
+            
+           </apex:column> 
+          </apex:pageBlockTable>
+          </div>
+          <apex:commandButton value="Add Row" action="{!addNewRow}" reRender="CallLogTabPanel">
+          <apex:param value="1" assignTo="{!addCount}" name="addCount"/>
+          </apex:commandButton>
+          </apex:pageBlock>
+        
+        </apex:tab>
+        <apex:tab label="Contact" name="Contact" id="tabThree">
+        <apex:pageBlock >
+        <apex:pageBlockTable value="{!wrapper}" var="wrpcon">
+        <!--<apex:column headerValue="Ident">
+         <apex:outputText value="{!wrpcon.ident}"/>
+        </apex:column>-->
+        
+        <apex:column headerValue="Contact">
+        <apex:inputField value="{!wrpcon.callLog.Contact__c}"/>
+        </apex:column>
+        
+        <apex:column headerValue="Customer">
+        <apex:inputField value="{!wrpcon.callLog.Customer__c}"/>
+        </apex:column>
+        
+        <apex:column headerValue="Subject">
+        <apex:inputField value="{!wrpcon.callLog.Subject__c}"/>
+        </apex:column>
+        
+        <apex:column headerValue="Agent">
+        <apex:inputField value="{!wrpcon.callLog.AgentName__c}"/>
+        </apex:column>
+        
+        <apex:column headerValue="Notes">
+        <apex:inputField value="{!wrpcon.callLog.CallNotes__c}"/>
+        </apex:column>
+        
+        <apex:column >
+          
+            <apex:commandButton value="Delete" action="{!delWrappercon}" reRender="CallLogTabPanel">
+            <apex:param name="toDelIdent1" value="{!wrpcon.ident}" assignTo="{!toDelIdentcon}"/> 
+            </apex:commandButton>
+            </apex:column> 
+        
+        </apex:pageBlockTable>
+        <apex:commandButton value="Add Row" action="{!addNewRow}" reRender="CallLogTabPanel">
+        <apex:param value="1" assignTo="{!addCount}" name="addCount"/>
+        </apex:commandButton>
+        </apex:pageBlock>
+        </apex:tab>
+    </apex:tabPanel>
+    </apex:form>        
+</apex:page>

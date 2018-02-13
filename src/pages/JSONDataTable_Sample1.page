@@ -1,0 +1,238 @@
+<apex:page controller="JSONDT_Sample1Controller"  >
+<apex:form >
+    <script>
+        function switchMenu(obj,obj1,obj2) 
+        {
+            var el = document.getElementById(obj);                                       
+            if ( el.style.display != 'none' ) {
+            el.style.display = 'none';
+            }
+            else {
+            el.style.display = '';
+            }
+            var e2 = document.getElementById(obj1);                                       
+            if ( e2.style.display != 'none' ) {
+            e2.style.display = 'none';
+            }
+            else {
+            e2.style.display = '';
+            }
+             var e3 = document.getElementById(obj2);                                       
+            if ( e2.style.display != 'none' ) {
+            e3.style.display = 'none';
+            }
+            else {
+            e3.style.display = '';
+            }
+
+        }
+</script>
+<apex:pageBlock >
+<apex:pageBlockButtons >
+    <apex:commandButton value="Search for Records" action="{!doSearch}" reRender="do" status="actStatusId"/>  
+        <apex:actionStatus id="actStatusId">
+                <apex:facet name="start">
+                    <img src="/img/loading.gif" />
+                </apex:facet>
+            </apex:actionStatus> 
+</apex:pageBlockButtons>
+</apex:pageBlock>
+    <apex:stylesheet value="{!URLFOR($Resource.JQueryDataTable, '/css/jquery.dataTables.css')}"/> 
+    <!-- jQuery library -->
+    <apex:includeScript value="{!URLFOR($Resource.JQueryDataTable, '/jquery.dataTables.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.JQueryDataTable, '/jquery-1.11.1.min.js')}"/>
+    {!ObjData}
+    <style type="text/css">
+        .sorting {
+            background: #f2f3f3 url('{! URLFOR($Resource.JQueryDataTable, 'images/sort_both.png') }') no-repeat center right !important;
+            padding-right: 20px !important;
+        }
+        .sorting_asc {
+            background: #f2f3f3 url('{! URLFOR($Resource.JQueryDataTable, 'images/sort_asc.png') }') no-repeat center right !important;
+            padding-right: 20px !important;
+        }
+        .sorting_desc {
+            background: #f2f3f3 url('{! URLFOR($Resource.JQueryDataTable, 'images/sort_desc.png') }') no-repeat center right !important;
+            padding-right: 20px !important;
+        }
+        .sorting_asc_disabled {
+            background: #f2f3f3 url('{! URLFOR($Resource.JQueryDataTable, 'images/details_open.png') }') no-repeat center right !important;
+            padding-right: 20px !important;
+        }
+        .sorting_desc_disabled {
+            background: #f2f3f3 url('{! URLFOR($Resource.JQueryDataTable, 'images/details_close.png') }') no-repeat center right !important;
+            padding-right: 20px !important;
+        }
+        table.dataTable tr.odd { background-color: white; }
+        table.dataTable tr.even { background-color: white; }
+        table.dataTable tr.odd td.sorting_1 { background-color: white; }
+        table.dataTable tr.odd td.sorting_2 { background-color: white; }
+        table.dataTable tr.odd td.sorting_3 { background-color: white; }
+        table.dataTable tr.even td.sorting_1 { background-color: white; }
+        table.dataTable tr.even td.sorting_2 { background-color: white; }
+        table.dataTable tr.even td.sorting_3 { background-color: white; }
+        .dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate {
+            padding: 3px;
+        }
+    </style>
+    <apex:pageBlock id="do">
+    <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+    </table>
+    <apex:pageBlockTable styleClass="dataTable" value="{!ordersList}" var="ord">
+        <apex:column >
+            <apex:facet name="header">. </apex:facet>
+            <apex:outputpanel id="plusimage">
+                  <apex:image url="{! URLFOR($Resource.JQueryDataTable, 'images/details_open.png') }" onclick="switchMenu('{!$Component.inlinetablesec}','{!$Component.minusimage}','{!$Component.plusimage}')" title="Expand - Team Member's"/> 
+            </apex:outputpanel>
+            <apex:outputpanel id="minusimage" style="display:none;">
+                  <apex:image url="{! URLFOR($Resource.JQueryDataTable, 'images/details_close.png') }" onclick="switchMenu('{!$Component.inlinetablesec}','{!$Component.plusimage}','{!$Component.minusimage}')" title="Collapse - Team Member's"/>
+            </apex:outputpanel>
+            <apex:outputpanel id="inlinetablesec" style="display:none;">
+                <apex:variable value="{!0}" var="rowNum"/>
+                <apex:repeat var="count" value="{!ord.name}">
+                    <apex:variable var="rowNum" value="{!rowNum+1}"/>
+                </apex:repeat>
+                   
+                   
+                <apex:pageblocktable value="{!ord.contacts}" var="tm" rendered="{!rowNum>0}">
+                    <apex:column headerValue="Contact ID">
+                           <apex:outputfield value="{!tm.id}"/>     
+                     </apex:column>                             
+                      <apex:column value="{!tm.firstname}"/>
+                      <apex:column value="{!tm.lastname}"/>                                                     
+                </apex:pageblocktable>
+                </apex:outputpanel>
+        </apex:column>
+        <apex:column headervalue="Account Name" >   
+                   <apex:facet name="header">    Account Name      </apex:facet>
+                    
+                    <apex:outputtext value="{!ord.Name}"/>
+                    <!--<apex:outputpanel id="plusimage">
+                          <apex:image url="{! URLFOR($Resource.JQueryDataTable, 'images/details_open.png') }" onclick="switchMenu('{!$Component.inlinetablesec}','{! URLFOR($Resource.JQueryDataTable, 'images/details_close.png') }','{! URLFOR($Resource.JQueryDataTable, 'images/details_open.png') }')" title="Expand - Team Member's"/> 
+                    </apex:outputpanel>
+                    <apex:outputpanel id="minusimage" style="display:none;">
+                          <apex:image url="{! URLFOR($Resource.JQueryDataTable, 'images/details_close.png') }" onclick="switchMenu('{!$Component.inlinetablesec}','{! URLFOR($Resource.JQueryDataTable, 'images/details_close.png') }')" title="Collapse - Team Member's"/>
+                    </apex:outputpanel>
+                    
+                    
+                    
+                    <apex:outputpanel id="inlinetablesec" style="display:none;">
+                                                <apex:variable value="{!0}" var="rowNum"/>
+                                                <apex:repeat var="count" value="{!ord.name}">
+                                                    <apex:variable var="rowNum" value="{!rowNum+1}"/>
+                                                </apex:repeat>
+                           
+                           
+                        <apex:pageblocktable value="{!ord.contacts}" var="tm" rendered="{!rowNum>0}">
+                            <apex:column headerValue="Contact ID">
+                                   <apex:outputfield value="{!tm.id}"/>     
+                             </apex:column>                             
+                              <apex:column value="{!tm.firstname}"/>
+                              <apex:column value="{!tm.lastname}"/>                                                     
+                        </apex:pageblocktable>
+                        
+                   </apex:outputpanel>     -->
+            </apex:column>
+        <apex:column >
+            <apex:facet name="header">Id</apex:facet>
+            <apex:outputText value="{!ord.Id}"/>
+        </apex:column> 
+        <apex:column >
+            <apex:facet name="header">Account</apex:facet>
+            <apex:outputText value="{!ord.Name}"/>
+        </apex:column>
+            
+        
+                
+    </apex:pageBlockTable>
+    <script type="text/javascript" language="javascript" src="{!URLFOR($Resource.JQueryDataTable, 'jquery-1.11.1.min.js')}"></script>
+        <script type="text/javascript" language="javascript" src="{!URLFOR($Resource.JQueryDataTable, 'jquery.dataTables.min.js')}"></script>
+        <script type="text/javascript" language="javascript">
+            var j$ = jQuery.noConflict();
+            j$('table.dataTable').dataTable({
+                sPaginationType: "full_numbers",
+                "ordering": true,
+                "info":     true
+            });
+        </script>   
+    </apex:pageBlock>
+    <script>
+    /* Formatting function for row details - modify as you need */
+    function format ( d ) {
+        // `d` is the original data object for the row
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+            '<tr>'+
+                '<td>Full name:</td>'+
+                '<td>'+d.name+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td>Extension number:</td>'+
+                '<td>'+d.extn+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td>Extra info:</td>'+
+                '<td>And any further details here (images etc)...</td>'+
+            '</tr>'+
+        '</table>';
+    }
+     
+    $(document).ready(function() {
+        alert("OOps");
+        var table = $('#example').DataTable( {
+        alert("OOps in DT");
+            "ajax": {!ObjData},
+            "columns": [
+                {
+                    "className":      'JSONDT_Sample1Controller.prepareData()',
+                    "orderable":      false,
+                    "data":           null,
+                    "defaultContent": ''
+                },
+                { "data": "name" },
+                { "data": "position" },
+                { "data": "salary" },
+                { "data": "salary" }
+            ],
+            "order": [[1, 'asc']]
+        } );
+         
+        // Add event listener for opening and closing details
+        $('#example tbody').on('click', 'td.details-control', function () {
+            var tr = $(this).closest('tr');
+            var row = table.row( tr );
+     
+            if ( row.child.isShown() ) {
+                // This row is already open - close it
+                row.child.hide();
+                tr.removeClass('shown');
+            }
+            else {
+                // Open this row
+                row.child( format(row.data()) ).show();
+                tr.addClass('shown');
+            }
+        } );
+    } );
+    </script>
+    
+    <Script>
+        td.details-control {
+            background: url('../resources/details_open.png') no-repeat center center;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            background: url('../resources/details_close.png') no-repeat center center;
+        }
+    </script>
+    
+    </apex:form>
+</apex:page>

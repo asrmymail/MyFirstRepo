@@ -1,0 +1,88 @@
+<!--https://force201.wordpress.com/2014/03/15/connecting-datatables-to-json-generated-by-apex/-->
+<apex:page controller="DataTableController">
+ 
+<link rel="stylesheet" type="text/css" href="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css"/>
+ 
+<apex:sectionHeader title="DataTables"/>
+ 
+<table id="table" cellpadding="0" cellspacing="0" border="0">
+    <thead>
+        <th>Name</th>
+        <th>Birthdate</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>FirstName</th>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+ 
+<script
+type="text/javascript"
+charset="utf8"
+src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"
+>
+</script>
+<script
+type="text/javascript"
+charset="utf8"
+src="https://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"
+>
+</script>
+<script>
+ 
+var j$ = jQuery.noConflict();
+ 
+var fields = ['Name', 'Birthdate', 'Phone', 'Email', 'FirstName'];
+ 
+var aoColumns = [];
+for (var i = 0; i < fields.length; i++) {
+    aoColumns.push({'mData': fields[i]});
+}
+ 
+j$(document).ready(function() {
+    j$('#table').dataTable({
+        'aoColumns': aoColumns,
+        'bProcessing': true,
+        'bServerSide': true,
+        'bFilter': false,
+        'sAjaxSource': 'fakeUrl',
+        'fnServerData': function(sSource, aoData, fnCallback) {
+            console.log(JSON.stringify(aoData));
+            // Call the @RemoteAction JavaScript function
+            DataTableController.contacts(aoData, function(result, event) {
+                if (event.type != 'exception') {
+                    console.log(JSON.stringify(result));
+                    for (var i = 0; i < result.aaData.length; i++) {
+                        var r = result.aaData[i];
+                        for (var j = 0; j < fields.length; j++) {
+                            var field = fields[j];
+                            if (r[field] == undefined) {
+                                // DataTables pops a dialog for undefined values
+                                r[field] = null;
+                            } else if (field == 'Birthdate') {
+                                // Dates transmitted as longs
+                                var d = new Date(r[field]);
+                                r[field] = ''
+                                        + (d.getMonth() + 1)
+                                        + '/'
+                                        + d.getDate()
+                                        + '/'
+                                        + d.getFullYear()
+                                        ;
+                            }
+                        }
+                    }
+                    // Call back into the DataTable function
+                    fnCallback(result);
+                } else {
+                    alert(event.message);
+                }
+            });
+        }
+    });
+});
+ 
+</script>
+ 
+</apex:page>

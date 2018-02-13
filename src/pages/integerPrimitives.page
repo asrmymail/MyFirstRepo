@@ -1,0 +1,16 @@
+<apex:page standardController="Account" extensions="integerPrimitives" lightningStylesheets="true">
+
+<apex:slds />
+
+<apex:form >
+    Enter Value: <apex:inputText value="{!VariableX}"/>
+    
+    <apex:commandButton action="{!action}" value="Go" reRender="call"/>
+    <apex:outputPanel id="call">
+        {!VariableX}<br/>
+        {!i}
+    </apex:outputPanel>
+    
+    {!Account.name}
+</apex:form>
+</apex:page>
