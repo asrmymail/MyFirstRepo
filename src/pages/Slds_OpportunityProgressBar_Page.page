@@ -1,5 +1,0 @@
-<apex:page standardController="Opportunity">
-    
-    <c:Slds_ProgressBarComponent Maindata="Opportunity,StageName,{!Opportunity.id}" />
- 
-</apex:page>

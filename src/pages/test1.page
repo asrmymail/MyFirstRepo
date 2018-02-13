@@ -1,7 +1,0 @@
-<apex:page controller="testControlelr1">
- <apex:form >
-     <apex:inputField value="{!clm.Subject__c}" />
-     <apex:inputField value="{!clm.CallNotes__c}" required="true"/>
-     <apex:commandButton value="Save" action="{!savecallm}"/>
- </apex:form>
-</apex:page>
